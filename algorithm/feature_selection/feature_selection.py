@@ -1,7 +1,11 @@
 from datetime import datetime
 import pickle
 from utils.data_process_helper import reduce_mem_usage
+from utils.constant import ROOT_PATH, DATAPath, PICKLE_PATH, DATA_FOR_MODELLING_PATH
 import pandas as pd
+import os
+import warnings
+warnings.filterwarnings('ignore')
 
 
 def merge_all_tables(application_train, application_test, bureau_aggregated, previous_aggregated,
@@ -114,12 +118,14 @@ def final_pickle_dump(train_data, test_data, train_file_name, test_file_name, fi
     Returns:
         None
     '''
+    if not os.path.exists(DATA_FOR_MODELLING_PATH):
+        os.makedirs(DATA_FOR_MODELLING_PATH)
     if verbose:
         print("Dumping the final preprocessed data to pickle files.")
         start = datetime.now()
-    with open(file_directory + train_file_name + '.pkl', 'wb') as f:
+    with open(os.path.join(PICKLE_PATH, train_file_name + '.pkl'), 'wb') as f:
         pickle.dump(train_data, f)
-    with open(file_directory + test_file_name + '.pkl', 'wb') as f:
+    with open(os.path.join(PICKLE_PATH, test_file_name + '.pkl'), 'wb') as f:
         pickle.dump(test_data, f)
 
     if verbose:
@@ -128,21 +134,19 @@ def final_pickle_dump(train_data, test_data, train_file_name, test_file_name, fi
 
 
 if __name__ == '__main__':
-    PICKLE_PATH = 'data/home-credit-default-risk/pickles/'
     # reading pickled files as dataframes
-    application_train = pd.read_pickle(PICKLE_PATH + 'application_train_preprocessed.pkl')
-    application_test = pd.read_pickle(PICKLE_PATH + 'application_test_preprocessed.pkl')
-    bureau_aggregated = pd.read_pickle(PICKLE_PATH + 'bureau_merged_preprocessed.pkl')
-    previous_aggregated = pd.read_pickle(PICKLE_PATH + 'previous_application_preprocessed.pkl')
-    installments_aggregated = pd.read_pickle(PICKLE_PATH + 'installments_payments_preprocessed.pkl')
-    pos_aggregated = pd.read_pickle(PICKLE_PATH + 'POS_CASH_balance_preprocessed.pkl')
-    cc_aggregated = pd.read_pickle(PICKLE_PATH + 'credit_card_balance_preprocessed.pkl')
-
+    application_train = pd.read_pickle(os.path.join(PICKLE_PATH, 'application_train_preprocessed.pkl'))
+    application_test = pd.read_pickle(os.path.join(PICKLE_PATH, 'application_test_preprocessed.pkl'))
+    bureau_aggregated = pd.read_pickle(os.path.join(PICKLE_PATH, 'bureau_merged_preprocessed.pkl'))
+    previous_aggregated = pd.read_pickle(os.path.join(PICKLE_PATH, 'previous_application_preprocessed.pkl'))
+    installments_aggregated = pd.read_pickle(os.path.join(PICKLE_PATH, 'installments_payments_preprocessed.pkl'))
+    pos_aggregated = pd.read_pickle(os.path.join(PICKLE_PATH, 'POS_CASH_balance_preprocessed.pkl'))
+    cc_aggregated = pd.read_pickle(os.path.join(PICKLE_PATH, 'credit_card_balance_preprocessed.pkl'))
 
     # merging all the tables together
     train_data, test_data = merge_all_tables(application_train, application_test, bureau_aggregated,
-                                                         previous_aggregated, installments_aggregated, pos_aggregated,
-                                                         cc_aggregated)
+                                             previous_aggregated, installments_aggregated, pos_aggregated,
+                                             cc_aggregated)
 
     create_new_features(train_data)
     create_new_features(test_data)
