@@ -2,7 +2,6 @@ from helper.helper import *
 from utils.constant import ROOT_PATH, DATAPath, PICKLE_PATH, DATA_FOR_MODELLING_PATH
 
 
-
 if __name__ == '__main__':
     # create folders if PICKLE_PATH does not exist
     if not os.path.exists(PICKLE_PATH):
