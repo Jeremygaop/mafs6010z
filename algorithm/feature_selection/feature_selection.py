@@ -10,16 +10,6 @@ warnings.filterwarnings('ignore')
 
 def merge_all_tables(application_train, application_test, bureau_aggregated, previous_aggregated,
                      installments_aggregated, pos_aggregated, cc_aggregated):
-    '''
-    Function to merge all the tables together with the application_train and application_test tables
-    on SK_ID_CURR.
-
-    Inputs:
-        All the previously pre-processed Tables.
-
-    Returns:
-        Single merged tables, one for training data and one for test data
-    '''
 
     # merging application_train and application_test with Aggregated bureau table
     app_train_merged = application_train.merge(bureau_aggregated, on='SK_ID_CURR', how='left')
@@ -41,16 +31,6 @@ def merge_all_tables(application_train, application_test, bureau_aggregated, pre
 
 
 def create_new_features(data):
-    '''
-    Function to create few more features after the merging of features, by using the
-    interactions between various tables.
-
-    Inputs:
-        data: DataFrame
-
-    Returns:
-        None
-    '''
 
     # previous applications columns
     prev_annuity_columns = [ele for ele in previous_aggregated.columns if 'AMT_ANNUITY' in ele]
@@ -98,26 +78,6 @@ def create_new_features(data):
 
 
 def final_pickle_dump(train_data, test_data, train_file_name, test_file_name, file_directory='', verbose=True):
-    '''
-    Function to dump the preprocessed files to pickle.
-
-    Inputs:
-        train_data: DataFrame
-            Training Data
-        test_data: DataFrame
-            Test Data
-        train_file_name: str
-            Name of pickle file for training data
-        test_file_name: str
-            Name of pickle file for test data
-        file_directory: str, default = ''
-            Path of directory to save pickle file into
-        verbose: bool, default = True
-            Whether to keep verbosity or not
-
-    Returns:
-        None
-    '''
     if not os.path.exists(DATA_FOR_MODELLING_PATH):
         os.makedirs(DATA_FOR_MODELLING_PATH)
     if verbose:

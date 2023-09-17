@@ -1,6 +1,8 @@
 import numpy as np
 
 
+
+
 def reduce_mem_usage(data, verbose=True):
     # source: https://www.kaggle.com/gemartin/load-data-reduce-memory-usage
     '''
